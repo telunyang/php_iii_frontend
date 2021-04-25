@@ -7,7 +7,7 @@ if( $_FILES["fileUpload"]["error"] === 0 ) {
         "./tmp/".$_FILES["fileUpload"]["name"] //實際存放路徑與自訂檔名
     );
 
-    //判斷上傳是否成功
+    //判斷上傳是否成功 
     if( $isSuccess ) {
         echo "上傳成功!!<br />";
         echo "檔案名稱: ".$_FILES["fileUpload"]["name"]."<br />";

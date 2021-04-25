@@ -9,7 +9,7 @@
 <body>
 
 <form name="myForm" 
-        action="./7-5-1.php" 
+        action="./7-5-1.php"  
         method="POST" 
         enctype="multipart/form-data">
     <h3>請選擇所要上傳的檔案</h3>
