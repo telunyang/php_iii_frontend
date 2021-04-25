@@ -65,5 +65,4 @@ try{
     $obj['info'] = "程式出錯: {$e->getMessage()}";
 }
 
-echo json_encode($obj, JSON_UNESCAPED_UNICODE); 
-?>
+echo json_encode($obj, JSON_UNESCAPED_UNICODE);
