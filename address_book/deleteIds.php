@@ -6,7 +6,7 @@ require_once('./checkSession.php');
 require_once('./db.inc.php');
 
 //SQL 語法
-$sql = "DELETE FROM `students` WHERE `id` = ? ";
+$sqlDelete = "DELETE FROM `students` WHERE `id` = ? ";
 
 $count = 0;
 
@@ -26,22 +26,22 @@ for($i = 0; $i < count($_POST['chk']); $i++){
     //若有找到 studentImg 的資料
     if($stmtGetImg->rowCount() > 0) {
         //取得指定 id 的學生資料 (1筆)
-        $arrImg = $stmtGetImg->fetchAll(PDO::FETCH_ASSOC);
+        $arrImg = $stmtGetImg->fetchAll()[0];
 
         //若是 studentImg 裡面不為空值，代表過去有上傳過
-        if($arrImg[0]['studentImg'] !== NULL){
+        if($arrImg['studentImg'] !== NULL){
             //刪除實體檔案
-            @unlink("./files/".$arrImg[0]['studentImg']);
+            @unlink("./files/".$arrImg['studentImg']);
         }     
     }
 
-    $arrParam = [
-        $_POST['chk'][$i]
+    $arrDeleteParam = [
+        (int)$_POST['chk'][$i]
     ];
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($arrParam);
-    $count += $stmt->rowCount();
+    $stmtDelete = $pdo->prepare($sqlDelete);
+    $stmtDelete->execute($arrDeleteParam);
+    $count += $stmtDelete->rowCount();
 }
 
 if($count > 0) {

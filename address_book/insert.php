@@ -1,11 +1,6 @@
 <?php
-header("Content-Type: text/html; chartset=utf-8");
-
-//引入判斷是否登入機制
-require_once('./checkSession.php');
-
-//引用資料庫連線
-require_once('./db.inc.php');
+require_once('./checkSession.php'); //引入判斷是否登入機制
+require_once('./db.inc.php'); //引用資料庫連線
 
 //SQL 敘述
 $sql = "INSERT INTO `students` 
@@ -22,8 +17,11 @@ if( $_FILES["studentImg"]["error"] === 0 ) {
     //建立完整名稱
     $imgFileName = $studentImg.".".$extension;
 
-    //若上傳成功，則將上傳檔案從暫存資料夾，移動到指定的資料夾或路徑
-    if( !move_uploaded_file($_FILES["studentImg"]["tmp_name"], "./files/".$imgFileName) ) {
+    //移動暫存檔案到實際存放位置
+    $isSuccess = move_uploaded_file($_FILES["studentImg"]["tmp_name"], "./files/".$imgFileName);
+
+    //若上傳失敗，則不會繼續往下執行，回到管理頁面
+    if( !$isSuccess ) {
         header("Refresh: 3; url=./admin.php");
         echo "圖片上傳失敗";
         exit();

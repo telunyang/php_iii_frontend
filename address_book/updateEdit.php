@@ -1,9 +1,6 @@
 <?php
-//引入判斷是否登入機制
-require_once('./checkSession.php');
-
-//引用資料庫連線
-require_once('./db.inc.php');
+require_once('./checkSession.php'); //引入判斷是否登入機制
+require_once('./db.inc.php'); //引用資料庫連線
 
 /**
  * 注意：
@@ -13,11 +10,6 @@ require_once('./db.inc.php');
  * 再針對圖片上傳的情況，給予對應的 SQL 字串和資料繫結設定。
  * 
  */
-
-// echo "<pre>";
-// print_r($_FILES);
-// echo "</pre>";
-// exit();
 
 //先對其它欄位，進行 SQL 語法字串連接
 $sql = "UPDATE `students` 
@@ -54,7 +46,7 @@ if( $_FILES["studentImg"]["error"] === 0 ) {
     if( move_uploaded_file($_FILES["studentImg"]["tmp_name"], "./files/".$studentImg) ) {
         /**
          * 刪除先前的舊檔案: 
-         * 一、先查詢出特定 id (editId) 資料欄位中的大頭貼檔案名稱
+         * 一、先查詢出特定 id 資料欄位中的大頭貼檔案名稱
          * 二、刪除實體檔案
          * 三、更新成新上傳的檔案名稱
          *  */ 
@@ -65,7 +57,7 @@ if( $_FILES["studentImg"]["error"] === 0 ) {
 
         //加入繫結陣列
         $arrGetImgParam = [
-            (int)$_POST['editId']
+            (int)$_POST['id']
         ];
 
         //執行 SQL 語法
@@ -74,12 +66,12 @@ if( $_FILES["studentImg"]["error"] === 0 ) {
         //若有找到 studentImg 的資料
         if($stmtGetImg->rowCount() > 0) {
             //取得指定 id 的學生資料 (1筆)
-            $arrImg = $stmtGetImg->fetchAll(PDO::FETCH_ASSOC);
+            $arrImg = $stmtGetImg->fetchAll()[0];
 
             //若是 studentImg 裡面不為空值，代表過去有上傳過
-            if($arrImg[0]['studentImg'] !== NULL){
+            if($arrImg['studentImg'] !== NULL){
                 //刪除實體檔案
-                @unlink("./files/".$arrImg[0]['studentImg']);
+                @unlink("./files/".$arrImg['studentImg']);
             } 
             
             /**
@@ -102,7 +94,7 @@ if( $_FILES["studentImg"]["error"] === 0 ) {
 
 //SQL 結尾
 $sql.= "WHERE `id` = ? ";
-$arrParam[] = (int)$_POST['editId'];
+$arrParam[] = (int)$_POST['id'];
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($arrParam);

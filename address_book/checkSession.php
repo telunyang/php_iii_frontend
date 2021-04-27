@@ -7,7 +7,7 @@ if( !isset($_SESSION['username']) ) {
     session_destroy();
     
     //3 秒後跳頁
-    header("Refresh: 3; url=./login.php");
+    header("Refresh: 3; url=./index.php");
     echo "請確實登入…3秒後自動回登入頁";
     exit();
 }

@@ -1,20 +1,28 @@
 <?php
-//引入判斷是否登入機制
-require_once('./checkSession.php');
-
-//引用資料庫連線
-require_once('./db.inc.php');
+require_once('./checkSession.php'); //引入判斷是否登入機制
+require_once('./db.inc.php'); //引用資料庫連線
 
 //SQL 敘述: 取得 students 資料表總筆數
-$sqlTotal = "SELECT count(1) FROM `students`";
+$sqlTotal = "SELECT count(1) AS `count` FROM `students`";
 
-//取得總筆數
-$total = $pdo->query($sqlTotal)->fetch(PDO::FETCH_NUM)[0];
+//執行 SQL 語法，並回傳、建立 PDOstatment 物件
+$stmtTotal = $pdo->query($sqlTotal);
+
+//查詢結果，取得第一筆資料(索引為 0)
+$arrTotal = $stmtTotal->fetchAll()[0];
+
+//資料表總筆數
+$total = $arrTotal['count'];
+
+/**
+ * 上面的作法，可以直接寫成： 
+ * $total = $pdo->query($sqlTotal)->fetchAll()[0]['count'];
+ */
 
 //每頁幾筆
 $numPerPage = 5;
 
-// 總頁數
+// 總頁數，ceil()為無條件進位
 $totalPages = ceil($total/$numPerPage); 
 
 //目前第幾頁
@@ -38,7 +46,7 @@ $page = $page < 1 ? 1 : $page;
     </style>
 </head>
 <body>
-<?php require_once('./templates/title.php'); ?>
+這裡是後端管理頁面 - <a href="./admin.php">通訊錄全覽</a> | <a href="./new.php">新增頁面</a> | <a href="./logout.php?logout=1">登出</a>
 <hr />
 <form name="myForm" method="POST" action="deleteIds.php">
     <table class="border">
@@ -65,7 +73,10 @@ $page = $page < 1 ? 1 : $page;
                 LIMIT ?, ? ";
 
         //設定繫結值
-        $arrParam = [($page - 1) * $numPerPage, $numPerPage];
+        $arrParam = [
+            ($page - 1) * $numPerPage, 
+            $numPerPage
+        ];
 
         //查詢分頁後的學生資料
         $stmt = $pdo->prepare($sql);
@@ -73,27 +84,27 @@ $page = $page < 1 ? 1 : $page;
 
         //資料數量大於 0，則列出所有資料
         if($stmt->rowCount() > 0) {
-            $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $arr = $stmt->fetchAll();
             for($i = 0; $i < count($arr); $i++) {
         ?>
             <tr>
                 <td class="border">
-                    <input type="checkbox" name="chk[]" value="<?php echo $arr[$i]['id']; ?>" />
+                    <input type="checkbox" name="chk[]" value="<?php echo $arr[$i]['id'] ?>" />
                 </td>
-                <td class="border"><?php echo $arr[$i]['studentId']; ?></td>
-                <td class="border"><?php echo $arr[$i]['studentName']; ?></td>
-                <td class="border"><?php echo $arr[$i]['studentGender']; ?></td>
-                <td class="border"><?php echo $arr[$i]['studentBirthday']; ?></td>
-                <td class="border"><?php echo $arr[$i]['studentPhoneNumber']; ?></td>
-                <td class="border"><?php echo nl2br($arr[$i]['studentDescription']); ?></td>
+                <td class="border"><?php echo $arr[$i]['studentId'] ?></td>
+                <td class="border"><?php echo $arr[$i]['studentName'] ?></td>
+                <td class="border"><?php echo $arr[$i]['studentGender'] ?></td>
+                <td class="border"><?php echo $arr[$i]['studentBirthday'] ?></td>
+                <td class="border"><?php echo $arr[$i]['studentPhoneNumber'] ?></td>
+                <td class="border"><?php echo nl2br($arr[$i]['studentDescription']) ?></td>
                 <td class="border">
                 <?php if($arr[$i]['studentImg'] !== NULL) { ?>
-                    <img class="w200px" src="./files/<?php echo $arr[$i]['studentImg']; ?>">
+                    <img class="w200px" src="./files/<?php echo $arr[$i]['studentImg'] ?>">
                 <?php } ?>
                 </td>
                 <td class="border">
-                    <a href="./edit.php?editId=<?php echo $arr[$i]['id']; ?>">編輯</a>
-                    <a href="./delete.php?deleteId=<?php echo $arr[$i]['id']; ?>">刪除</a>
+                    <a href="./edit.php?id=<?php echo $arr[$i]['id']; ?>">編輯</a>
+                    <a href="./delete.php?id=<?php echo $arr[$i]['id']; ?>">刪除</a>
                 </td>
             </tr>
         <?php
@@ -111,7 +122,7 @@ $page = $page < 1 ? 1 : $page;
             <tr>
                 <td class="border" colspan="9">
                 <?php for($i = 1; $i <= $totalPages; $i++){ ?>
-                    <a href="?page=<?= $i ?>"><?= $i ?></a>
+                    <a href="?page=<?php echo $i ?>"><?php echo $i ?></a>
                 <?php } ?>
                 </td>
             </tr>

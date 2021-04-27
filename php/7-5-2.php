@@ -12,6 +12,11 @@ if( $_FILES["fileUpload"]["error"] === 0 ) {
     $extension = $arr[ count($arr) - 1 ];
 
     /**
+     * 取得副檔名，還有下面這種寫法：
+     * $extension = pathinfo($_FILES["studentImg"]["name"], PATHINFO_EXTENSION);
+     */
+
+    /**
      * 使用時間函式，定義上傳檔案名稱
      * 用法 -> date("格式化字串")
      * 例如 -> date("Y-m-d H:i:s") -> 2021-12-31 13:14:00

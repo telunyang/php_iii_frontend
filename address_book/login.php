@@ -2,8 +2,6 @@
 //啟動 session
 session_start();
 
-header("Content-Type: text/html; chartset=utf-8");
-
 //引用資料庫連線
 require_once('./db.inc.php');
 
@@ -30,10 +28,16 @@ if( isset($_POST['username']) && isset($_POST['pwd']) ){
         header("Refresh: 3; url=./admin.php");
         echo "登入成功!!! 3秒後自動進入後端頁面";
     } else {
+        //關閉 session
+        session_destroy();
+
         header("Refresh: 3; url=./index.php");
         echo "登入失敗…3秒後自動回登入頁";
     }
 } else {
+    //關閉 session
+    session_destroy();
+
     header("Refresh: 3; url=./index.php");
     echo "請確實登入…3秒後自動回登入頁";
 }

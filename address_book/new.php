@@ -10,7 +10,7 @@
     </style>
 </head>
 <body>
-<?php require_once('./templates/title.php'); ?>
+這裡是後端管理頁面 - <a href="./admin.php">通訊錄全覽</a> | <a href="./new.php">新增頁面</a> | <a href="./logout.php?logout=1">登出</a>
 <hr />
 <form name="myForm" method="POST" action="./insert.php" enctype="multipart/form-data">
 <table class="border">
