@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:700');
+
+
+
+        body {
+            background-color: #111;
+            background-image: radial-gradient(#333, #111);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #fff;
+            text-align: center;
+            width: 100vw;
+            font-weight: 700;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        #fly-in {
+            font-size: 4em;
+            margin: 40vh auto;
+            height: 20vh;
+            text-transform: uppercase;
+        }
+
+        #fly-in span {
+            display: block;
+            font-size: .4em;
+            opacity: .8;
+        }
+
+        #fly-in div {
+            position: fixed;
+            < !--codepen.io/h-kod/-->margin: 2vh 0;
+            opacity: 0;
+            left: 10vw;
+            width: 80vw;
+            animation: switch 32s linear infinite;
+        }
+
+        #fly-in div:nth-child(2) {
+            animation-delay: 4s
+        }
+
+        #fly-in div:nth-child(3) {
+            animation-delay: 8s
+        }
+
+        @keyframes switch {
+            0% {
+                opacity: 0;
+                filter: blur(20px);
+                transform: scale(12)
+            }
+
+            3% {
+                opacity: 1;
+                filter: blur(0);
+                transform: scale(1)
+            }
+
+            10% {
+                opacity: 1;
+                filter: blur(0);
+                transform: scale(.9)
+            }
+
+            13% {
+                opacity: 0;
+                filter: blur(10px);
+                transform: scale(.1)
+            }
+
+            80% {
+                opacity: 0
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="fly-in">
+        <div><span>您</span>已經登出</div>
+        <div>謝謝您<span>歡迎下次再來</span></div>
+    </div>
+
+</body>
+
+</html>
