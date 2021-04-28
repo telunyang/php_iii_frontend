@@ -2,14 +2,12 @@
 require_once('./checkAdmin.php'); //引入登入判斷
 require_once('../db.inc.php'); //引用資料庫連線
 
-// echo "<pre>";
-// print_r($_POST);
-// echo "</pre>";
-// exit();
-
 //回傳狀態
 $objResponse = [];
+$objResponse['success'] = false;
+$objResponse['info'] = "新增失敗";
 
+//上傳成功的
 if( $_FILES["itemImg"]["error"] === 0 ) {
     //為上傳檔案命名
     $strDatetime = "item_".date("YmdHis");
@@ -18,13 +16,15 @@ if( $_FILES["itemImg"]["error"] === 0 ) {
     $extension = pathinfo($_FILES["itemImg"]["name"], PATHINFO_EXTENSION);
 
     //建立完整名稱
-    $itemImg = $strDatetime.".".$extension;
+    $imgFileName = $strDatetime.".".$extension;
 
-    //若上傳失敗，則回報錯誤訊息
-    if( !move_uploaded_file($_FILES["itemImg"]["tmp_name"], "../images/items/{$itemImg}") ) {
-        $objResponse['success'] = false;
-        $objResponse['info'] = "上傳圖片失敗";
-        echo json_encode($objResponse, JSON_UNESCAPED_UNICODE);
+    //移動暫存檔案到實際存放位置
+    $isSuccess = move_uploaded_file($_FILES["studentImg"]["tmp_name"], "./files/".$imgFileName);
+
+    //若上傳失敗，則不會繼續往下執行，回到管理頁面
+    if( !$isSuccess ) {
+        header("Refresh: 3; url=./admin.php");
+        echo "圖片上傳失敗";
         exit();
     }
 }
@@ -36,25 +36,25 @@ $sql = "INSERT INTO `items` (`itemName`, `itemImg`, `itemPrice`, `itemQty`, `ite
 //繫結用陣列
 $arrParam = [
     $_POST['itemName'],
-    $itemImg,
+    $imgFileName,
     $_POST['itemPrice'],
     $_POST['itemQty'],
     $_POST['itemCategoryId']
 ];
 
+//取得 PDOstatement 物綿
 $stmt = $pdo->prepare($sql);
+
+//執行預處理後的 SQL 語法
 $stmt->execute($arrParam);
 
+//影響列數大於0，代表新增成功
 if($stmt->rowCount() > 0) {
     header("Refresh: 3; url=./admin.php");
     $objResponse['success'] = true;
     $objResponse['info'] = "新增成功";
     echo json_encode($objResponse, JSON_UNESCAPED_UNICODE);
-    exit();
 } else {
     header("Refresh: 3; url=./admin.php");
-    $objResponse['success'] = false;
-    $objResponse['info'] = "沒有新增資料";
     echo json_encode($objResponse, JSON_UNESCAPED_UNICODE);
-    exit();
 }

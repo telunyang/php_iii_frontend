@@ -9,13 +9,13 @@ $sql = "INSERT INTO `students`
 
 if( $_FILES["studentImg"]["error"] === 0 ) {
     //為上傳檔案命名
-    $studentImg = date("YmdHis");
+    $strDatetime = date("YmdHis");
     
     //找出副檔名
     $extension = pathinfo($_FILES["studentImg"]["name"], PATHINFO_EXTENSION);
 
     //建立完整名稱
-    $imgFileName = $studentImg.".".$extension;
+    $imgFileName = $strDatetime.".".$extension;
 
     //移動暫存檔案到實際存放位置
     $isSuccess = move_uploaded_file($_FILES["studentImg"]["tmp_name"], "./files/".$imgFileName);
@@ -41,7 +41,7 @@ $arr = [
 
 $pdo_stmt = $pdo->prepare($sql);
 $pdo_stmt->execute($arr);
-if($pdo_stmt->rowCount() === 1) {
+if($pdo_stmt->rowCount() > 0) {
     header("Refresh: 3; url=./admin.php");
     echo "新增成功";
 } else {

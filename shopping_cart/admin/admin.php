@@ -2,21 +2,35 @@
 require_once('./checkAdmin.php'); //引入登入判斷
 require_once('../db.inc.php'); //引用資料庫連線
 
-
+//SQL 敘述: 取得 items 資料表總筆數
 $sqlTotal = "SELECT count(1) FROM `items`"; //SQL 敘述
-$total = $pdo->query($sqlTotal)->fetch(PDO::FETCH_NUM)[0]; //取得總筆數
-$numPerPage = 5; //每頁幾筆
-$totalPages = ceil($total/$numPerPage); // 總頁數
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; //目前第幾頁
-$page = $page < 1 ? 1 : $page; //若 page 小於 1，則回傳 1
 
+//執行 SQL 語法，並回傳、建立 PDOstatment 物件
+$stmtTotal = $pdo->query($sqlTotal);
 
+//查詢結果，取得第一筆資料(索引為 0)
+$arrTotal = $stmtTotal->fetchAll()[0];
+
+//資料表總筆數
+$total = $arrTotal['count'];
+
+//每頁幾筆
+$numPerPage = 5;
+
+// 總頁數，ceil()為無條件進位
+$totalPages = ceil($total/$numPerPage); 
+
+//目前第幾頁
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+//若 page 小於 1，則回傳 1
+$page = $page < 1 ? 1 : $page;
 
 //商品種類 SQL 敘述
-$sqlTotalCatogories = "SELECT count(1) FROM `categories`";
+$sqlTotalCatogories = "SELECT count(1) AS `count` FROM `categories`";
 
 //取得商品種類總筆數
-$totalCatogories = $pdo->query($sqlTotalCatogories)->fetch(PDO::FETCH_NUM)[0];
+$totalCatogories = $pdo->query($sqlTotalCatogories)->fetchAll()[0]['count'];
 ?>
 <!DOCTYPYE html>
 <html>
@@ -110,7 +124,7 @@ if($totalCatogories > 0) {
             <tr>
                 <td class="border" colspan="9">
                 <?php for($i = 1; $i <= $totalPages; $i++){ ?>
-                    <a href="?page=<?=$i?>"><?= $i ?></a>
+                    <a href="?page=<?php echo $i ?>"><?php echo $i ?></a>
                 <?php } ?>
                 </td>
             </tr>
@@ -125,9 +139,8 @@ if($totalCatogories > 0) {
     </table>
 </form>
 <?php 
-} else { 
-    //引入尚未建立商品種類的文字描述
-    require_once('./templates/noCategory.php');
+} else {
+    echo "請先建立商品類別";
 }?>
 </body>
 </html>

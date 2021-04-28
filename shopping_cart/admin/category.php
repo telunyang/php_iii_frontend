@@ -12,7 +12,7 @@ function buildTree($pdo, $parentId = 0){
     $stmt->execute($arrParam);
     if($stmt->rowCount() > 0) {
         echo "<ul>";
-        $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $arr = $stmt->fetchAll();
         for($i = 0; $i < count($arr); $i++) {
             echo "<li>";
             echo "<input type='radio' name='categoryId' value='".$arr[$i]['categoryId']."' />";

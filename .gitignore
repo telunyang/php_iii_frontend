@@ -1,0 +1,6 @@
+# composer
+vendor
+composer.*
+
+# test code
+phpquery.php

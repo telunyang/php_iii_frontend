@@ -7,5 +7,4 @@ session_destroy();
 
 //3 秒後跳頁
 header("Refresh: 9; url=./index.php");
-// echo "登出成功";
-require_once 'templates/logout.html';
+echo "登出成功";
