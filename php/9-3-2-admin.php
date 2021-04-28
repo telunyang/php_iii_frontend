@@ -23,7 +23,7 @@ if( !isset($_SESSION['username']) ) {
 </head>
 <body>
 
-這裡是後端管理頁面 - <a href="./9-3-3-logout.php?logout=1">登出</a>
+這裡是後端管理頁面 - <a href="./9-3-3-logout.php">登出</a>
 
 <hr>
 

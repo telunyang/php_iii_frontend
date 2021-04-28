@@ -1,7 +1,4 @@
 <?php
-//啟動 session
-session_start();
-
 //預設帳號密碼，測試 session 登入用
 $username = 'test';
 $pwd = sha1('test'); //sha1 雜湊後的字串
@@ -12,24 +9,21 @@ if( isset($_POST['username']) && isset($_POST['pwd']) ){
     if( $_POST['username'] === $username && sha1($_POST['pwd']) === $pwd){
         //3 秒後跳頁
         header("Refresh: 3; url=./9-3-2-admin.php");
+
+        //啟動 session
+        session_start();
         
         //將傳送過來的 post 變數資料，放到 session，
         $_SESSION['username'] = $_POST['username'];
 
         echo "登入成功!!! 3秒後自動進入後端頁面";
     } else {
-        //關閉 session
-        session_destroy();
-
         //3 秒後跳頁
         header("Refresh: 3; url=./9-3.php");
         
         echo "登入失敗…3秒後自動回登入頁";
     }
 } else {
-    //關閉 session
-    session_destroy();
-    
     //3 秒後跳頁
     header("Refresh: 3; url=./9-3.php");
     

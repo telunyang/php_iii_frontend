@@ -15,6 +15,6 @@ if( $_FILES["fileUpload"]["error"] === 0 ) {
         echo "檔案大小: ".$_FILES["fileUpload"]["size"]."<br />";
     } else { //檔案移動失敗，則顯示錯誤訊息
         echo "上傳失敗…<br />";
-        echo "<a href='javascript:windows.history.back();'>回上一頁</a>";
+        echo "<a href='javascript:window.history.back();'>回上一頁</a>";
     }
 }
