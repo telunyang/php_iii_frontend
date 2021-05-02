@@ -32,10 +32,9 @@ if( $stmtGetImg->rowCount() > 0 ){
     $count = $stmtDelte->rowCount();
 }
 
+header("Refresh: 3; url=./admin.php");
 if($count > 0) {
-    header("Refresh: 3; url=./admin.php");
     echo "刪除成功";
 } else {
-    header("Refresh: 3; url=./admin.php");
     echo "刪除失敗";
 }
