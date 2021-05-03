@@ -17,9 +17,13 @@ require_once('../db.inc.php'); //引用資料庫連線
     </style>
 </head>
 <body>
-<?php require_once('./templates/title.php'); ?>
+
+這裡是後端管理頁面 | <a href="./category.php">編輯類別</a> | <a href="./new.php">新增商品</a> | <a href="./admin.php">商品列表</a> | <a href="./orders.php">訂單一覽</a> | <a href="./logout.php">登出</a>
+
 <hr />
+
 <h3>商品列表</h3>
+
 <form name="myForm" enctype="multipart/form-data" method="POST" action="update.php">
     <table class="border">
         <thead>
@@ -104,7 +108,7 @@ require_once('../db.inc.php'); //引用資料庫連線
             <tr>
                 <td class="border" colspan="7"><input type="submit" name="smb" value="更新"></td>
             </tr>
-        </tfoo>
+        </tfoot>
     </table>
     <input type="hidden" name="itemId" value="<?php echo (int)$_GET['itemId']; ?>">
 </form>

@@ -10,7 +10,6 @@ $objResponse['info'] = "沒有任何更新";
 //用在繫結 SQL 用的陣列
 $arrParam = [];
 
-
 //SQL 語法
 $sql = "UPDATE `items` SET ";
 
@@ -30,6 +29,7 @@ if( $_FILES["itemImg"]["error"] === 0 ) {
 
     //若上傳成功 (有夾帶檔案上傳)，則將上傳檔案從暫存資料夾，移動到指定的資料夾或路徑
     $isSuccess = move_uploaded_file($_FILES["itemImg"]["tmp_name"], "../images/items/{$itemImg}");
+    
     if( $isSuccess ) {
         //先查詢出特定 id (itemId) 資料欄位中的大頭貼檔案名稱
         $sqlGetImg = "SELECT `itemImg` FROM `items` WHERE `itemId` = ? ";

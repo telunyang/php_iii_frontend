@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-04-21 20:10:50
+-- 產生時間： 2021-05-04 01:28:20
 -- 伺服器版本： 10.4.18-MariaDB
 -- PHP 版本： 8.0.3
 
@@ -37,6 +37,13 @@ CREATE TABLE `admin` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp() COMMENT '新增時間',
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理者帳號';
+
+--
+-- 傾印資料表的資料 `admin`
+--
+
+INSERT INTO `admin` (`id`, `username`, `pwd`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', '優質賣家', '2021-05-03 00:16:57', '2021-05-03 00:16:57');
 
 -- --------------------------------------------------------
 
@@ -101,7 +108,7 @@ CREATE TABLE `item_lists` (
   `checkSubtotal` int(11) NOT NULL COMMENT '結帳時小計',
   `created_at` datetime NOT NULL DEFAULT current_timestamp() COMMENT '新增時間',
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='訂單中的商品列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='訂單中的商品明細';
 
 -- --------------------------------------------------------
 
@@ -141,10 +148,10 @@ CREATE TABLE `multiple_images` (
 CREATE TABLE `orders` (
   `orderId` int(11) NOT NULL COMMENT '流水號',
   `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '使用者帳號',
-  `paymentTypeId` int(11) NOT NULL COMMENT '付款方式',
+  `paymentTypeId` int(11) DEFAULT NULL COMMENT '付款方式',
   `created_at` datetime NOT NULL DEFAULT current_timestamp() COMMENT '新增時間',
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='結帳資料表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='訂單資料表';
 
 -- --------------------------------------------------------
 
@@ -195,43 +202,52 @@ ALTER TABLE `admin`
 -- 資料表索引 `categories`
 --
 ALTER TABLE `categories`
-  ADD PRIMARY KEY (`categoryId`);
+  ADD PRIMARY KEY (`categoryId`),
+  ADD KEY `categoryParentId` (`categoryParentId`);
 
 --
 -- 資料表索引 `comments`
 --
 ALTER TABLE `comments`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `itemId` (`itemId`),
+  ADD KEY `parentId` (`parentId`);
 
 --
 -- 資料表索引 `items`
 --
 ALTER TABLE `items`
-  ADD PRIMARY KEY (`itemId`);
+  ADD PRIMARY KEY (`itemId`),
+  ADD KEY `itemCategoryId` (`itemCategoryId`);
 
 --
 -- 資料表索引 `item_lists`
 --
 ALTER TABLE `item_lists`
-  ADD PRIMARY KEY (`itemListId`);
+  ADD PRIMARY KEY (`itemListId`),
+  ADD KEY `orderId` (`orderId`),
+  ADD KEY `itemId` (`itemId`);
 
 --
 -- 資料表索引 `item_tracking`
 --
 ALTER TABLE `item_tracking`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `itemId` (`itemId`);
 
 --
 -- 資料表索引 `multiple_images`
 --
 ALTER TABLE `multiple_images`
-  ADD PRIMARY KEY (`multipleImageId`);
+  ADD PRIMARY KEY (`multipleImageId`),
+  ADD KEY `itemId` (`itemId`);
 
 --
 -- 資料表索引 `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`orderId`);
+  ADD PRIMARY KEY (`orderId`),
+  ADD KEY `paymentTypeId` (`paymentTypeId`);
 
 --
 -- 資料表索引 `payment_types`
@@ -254,7 +270,7 @@ ALTER TABLE `users`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號', AUTO_INCREMENT=2;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `categories`
@@ -309,6 +325,48 @@ ALTER TABLE `payment_types`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號';
+
+--
+-- 已傾印資料表的限制式
+--
+
+--
+-- 資料表的限制式 `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`itemId`) REFERENCES `items` (`itemId`) ON UPDATE CASCADE;
+
+--
+-- 資料表的限制式 `items`
+--
+ALTER TABLE `items`
+  ADD CONSTRAINT `items_ibfk_1` FOREIGN KEY (`itemCategoryId`) REFERENCES `categories` (`categoryId`) ON UPDATE CASCADE;
+
+--
+-- 資料表的限制式 `item_lists`
+--
+ALTER TABLE `item_lists`
+  ADD CONSTRAINT `item_lists_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `orders` (`orderId`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `item_lists_ibfk_2` FOREIGN KEY (`itemId`) REFERENCES `items` (`itemId`) ON UPDATE CASCADE;
+
+--
+-- 資料表的限制式 `item_tracking`
+--
+ALTER TABLE `item_tracking`
+  ADD CONSTRAINT `item_tracking_ibfk_1` FOREIGN KEY (`itemId`) REFERENCES `items` (`itemId`) ON UPDATE CASCADE;
+
+--
+-- 資料表的限制式 `multiple_images`
+--
+ALTER TABLE `multiple_images`
+  ADD CONSTRAINT `multiple_images_ibfk_1` FOREIGN KEY (`itemId`) REFERENCES `items` (`itemId`) ON UPDATE CASCADE;
+
+--
+-- 資料表的限制式 `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`paymentTypeId`) REFERENCES `payment_types` (`paymentTypeId`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

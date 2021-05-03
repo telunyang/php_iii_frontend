@@ -41,10 +41,9 @@ if($stmt->rowCount() > 0) {
     //註冊 session
     $_SESSION["username"] = $_POST["username"];
     $_SESSION["name"] = $_POST["name"];
-
+    
     $objResponse['success'] = true;
     $objResponse['info'] = "註冊成功";
-    
 }
 
 echo json_encode($objResponse, JSON_UNESCAPED_UNICODE);

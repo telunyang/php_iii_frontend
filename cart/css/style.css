@@ -1,0 +1,26 @@
+img.list-item{
+    width: 100%;
+    max-width: 443.75px;
+}
+
+p.list-item-card {
+    height: 48px;
+}
+
+img.item-view {
+    width: 100%;
+    max-width: 500px;
+}
+
+img.item-preview {
+    width: 80px;
+    height: 80px;
+}
+
+img.item-tracking-preview {
+    width: 250px;
+}
+
+img.payment_type_icon{
+    width: 50px;
+}

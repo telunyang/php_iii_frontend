@@ -43,10 +43,8 @@ if($stmt->rowCount() > 0) {
     $objResponse['success'] = true;
     $objResponse['info'] = "註冊成功";
     echo json_encode($objResponse, JSON_UNESCAPED_UNICODE);
-    exit();
 } else {
     header("Refresh: 3; url=./index.php");
     $objResponse['info'] = "註冊失敗";
     echo json_encode($objResponse, JSON_UNESCAPED_UNICODE);
-    exit();
 }

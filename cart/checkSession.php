@@ -7,7 +7,6 @@ if( !isset($_SESSION['username']) ) {
     
     //3 秒後跳頁
     header("Refresh: 3; url=./index.php");
-    $objResponse['info'] = "請確實登入…3秒後自動回登入頁";
     echo json_encode($objResponse, JSON_UNESCAPED_UNICODE);
     exit();
 }
