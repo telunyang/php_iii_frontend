@@ -37,10 +37,10 @@ $arrParam = [
 $stmt = $pdo->prepare($sql);
 $stmt->execute($arrParam);
 
+header("Refresh: 3; url=./admin.php");
+
 if($stmt->rowCount() > 0) {
-    header("Refresh: 3; url=./admin.php");
     echo "刪除成功";
 } else {
-    header("Refresh: 3; url=./admin.php");
     echo "刪除失敗";
 }

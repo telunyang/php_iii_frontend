@@ -99,10 +99,10 @@ $arrParam[] = (int)$_POST['id'];
 $stmt = $pdo->prepare($sql);
 $stmt->execute($arrParam);
 
+header("Refresh: 3; url=./admin.php");
+
 if( $stmt->rowCount() > 0 ){
-    header("Refresh: 3; url=./admin.php");
     echo "更新成功";
 } else {
-    header("Refresh: 3; url=./admin.php");
     echo "沒有任何更新";
 }
