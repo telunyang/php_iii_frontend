@@ -116,10 +116,10 @@ require_once('./db.inc.php');
                     </thead>
                     <tbody>
                     <?php
-                    $sqlOrder = "SELECT `orders`.`orderId`,`orders`.`created_at`
+                    $sqlOrder = "SELECT `orderId`,`created_at`
                                 FROM `orders` 
-                                WHERE `orders`.`username` = ? 
-                                ORDER BY `orders`.`orderId` DESC";
+                                WHERE `username` = ? 
+                                ORDER BY `orderId` DESC";
                     $stmtOrder = $pdo->prepare($sqlOrder);
                     $stmtOrder->execute([$_SESSION["username"]]);
                     if($stmtOrder->rowCount() > 0){

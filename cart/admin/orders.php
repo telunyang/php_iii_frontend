@@ -31,7 +31,7 @@ require_once('../db.inc.php'); //引用資料庫連線
                 <div class="p-2 px-3 text-uppercase">訂單編號</div>
             </th>
             <th scope="col" class="border">
-                <div class="py-2 text-uppercase">付款方式</div>
+                <div class="py-2 text-uppercase">成立時間</div>
             </th>
             <th scope="col" class="border">
                 <div class="py-2 text-uppercase">詳細資訊</div>
@@ -40,10 +40,9 @@ require_once('../db.inc.php'); //引用資料庫連線
     </thead>
     <tbody>
     <?php
-    $sqlOrder = "SELECT `orders`.`orderId`,`orders`.`created_at`,`orders`.`updated_at`, `payment_types`.`paymentTypeName`
-                FROM `orders` INNER JOIN `payment_types`
-                ON `orders`.`paymentTypeId` = `payment_types`.`paymentTypeId`
-                ORDER BY `orders`.`orderId` DESC";
+    $sqlOrder = "SELECT `orderId`, `created_at`
+                FROM `orders`
+                ORDER BY `orderId` DESC";
     $stmtOrder = $pdo->query($sqlOrder);
     if($stmtOrder->rowCount() > 0){
         $arrOrders = $stmtOrder->fetchAll();
@@ -51,7 +50,7 @@ require_once('../db.inc.php'); //引用資料庫連線
     ?>
         <tr>
             <th scope="row" class="border"><?php echo $arrOrders[$i]["orderId"] ?></th>
-            <td class="border"><?php echo $arrOrders[$i]["paymentTypeName"] ?></td>
+            <td class="border"><?php echo $arrOrders[$i]["created_at"] ?></td>
             <td class="border">
             <?php
             //顯示訂單下的所有商品明細列表
@@ -78,7 +77,7 @@ require_once('../db.inc.php'); //引用資料庫連線
                 <p>單價: <?php echo $arrItemList[$j]["checkPrice"] ?></p>
                 <p>數量: <?php echo $arrItemList[$j]["checkQty"] ?></p>
                 <p>小計: <?php echo $arrItemList[$j]["checkSubtotal"] ?></p>
-                <br />
+                <hr>
             <?php
                 }
             }
